@@ -13,6 +13,7 @@ export const fetchTodos = createAsyncThunk("fetchTodos", async () => {
  const todoSlice = createSlice({
     name: "todo",
     initialState: {
+     count: 0,
      isLoading: false,
      data: [],
      isError: false
@@ -28,9 +29,16 @@ export const fetchTodos = createAsyncThunk("fetchTodos", async () => {
      builder.addCase(fetchTodos.rejected, (state, action) => {
       state.isError = true;
      })
+    },
+    reducers: {
+      increment: (state, action) => {
+        state.count += action.payload
+      }
     }
    });
 
+   const {increment} = todoSlice.actions
+   
    export const store = configureStore({
     reducer: {
       data: todoSlice.reducer
@@ -40,8 +48,12 @@ export const fetchTodos = createAsyncThunk("fetchTodos", async () => {
 function App() {
     const dispatch = useDispatch();
     const state = useSelector((state) => state.data);
- 
-    console.log("state", state);
+  
+    useEffect(()=> {
+      dispatch(increment(1))
+    },[])
+
+    console.log(state)
     return (
    <div className="App">
     
